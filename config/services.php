@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'encryption' => [
+        'public_key' => env('APP_PUBLIC_KEY'),
+        'private_key' => env('APP_PRIVATE_KEY')
+    ]
 
 ];
