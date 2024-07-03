@@ -69,7 +69,6 @@ class JwtToken extends Model
     }
 
     public function fillPermittedTokens(int|string ...$tokens): bool
-
     {
         return $this->forceFill([
             'permissions' => [

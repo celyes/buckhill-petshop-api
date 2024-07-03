@@ -3,12 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthenticateUserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Requests\CreateUserRequest;
 use App\Services\AccountService;
 use App\Services\JwtService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserController extends Controller
 {
@@ -27,19 +27,26 @@ class UserController extends Controller
      */
     public function login(AuthenticateUserRequest $request): JsonResponse
     {
-        if (
+        try {
             $accountData = $this->accountService->authenticate(
                 $request->input('email'),
                 $request->input('password')
-            )
-        ) {
-            return response()->json([
-                'user' => new UserResource($accountData['user']),
-                'access_token' => $accountData['access_token'],
-                'refresh_token' => $accountData['refresh_token'],
-            ]);
-        }
+            );
 
-        abort(400, "Invalid credentials");
+            return response()->json($accountData);
+
+        } catch (HttpException) {
+            abort(400, 'Invalid credentials');
+        }
+    }
+
+    public function create(CreateUserRequest $request)
+    {
+        try {
+            $accountData = $this->accountService->create($request->validated());
+            return response()->json($accountData, 201);
+        } catch (HttpException) {
+            abort(401, 'Invalid credentials');
+        }
     }
 }
