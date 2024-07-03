@@ -19,6 +19,10 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(JwtService::class, function (Application $app) {
             return new JwtService();
         });
+
+        $this->app->singleton(AccountService::class, function (Application $app) {
+            return new AccountService($app->make(JwtService::class));
+        });
     }
 
     /**
