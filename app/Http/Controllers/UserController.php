@@ -27,17 +27,16 @@ class UserController extends Controller
      */
     public function login(AuthenticateUserRequest $request): JsonResponse
     {
-        try {
+        if(
             $accountData = $this->accountService->authenticate(
                 $request->input('email'),
                 $request->input('password')
-            );
-
+            )
+        ) {
             return response()->json($accountData);
-
-        } catch (HttpException) {
-            abort(400, 'Invalid credentials');
         }
+        abort(400, 'Invalid credentials');
+
     }
 
     public function create(CreateUserRequest $request)

@@ -8,6 +8,5 @@ use Tests\Fixtures\UserFixture;
 
 abstract class TestCase extends BaseTestCase
 {
-    use RefreshDatabase;
     use UserFixture;
 }
