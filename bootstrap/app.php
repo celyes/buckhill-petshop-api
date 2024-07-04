@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Middleware\JwtAuthCheck;
+use App\Http\Middleware\VerifyJwtToken;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -34,7 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-           'jwt' => JwtAuthCheck::class
+           'jwt' => VerifyJwtToken::class
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {

@@ -2,15 +2,16 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
+use Closure;
 use App\Models\JwtToken;
 use App\Services\JwtService;
-use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Lcobucci\JWT\UnencryptedToken;
 use Symfony\Component\HttpFoundation\Response;
 
-class JwtAuthCheck
+class VerifyJwtToken
 {
     /**
      * Handle an incoming request.
@@ -19,7 +20,8 @@ class JwtAuthCheck
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if ($this->check($request->bearerToken())) {
+        $bearerToken = $request->bearerToken();
+        if ($bearerToken && $this->check($bearerToken)) {
             return $next($request);
         }
         abort(401, 'Unauthenticated');
@@ -27,26 +29,29 @@ class JwtAuthCheck
 
     protected function check(string $token): bool
     {
+
         $jwtService = App::make(JwtService::class);
-        $now = new \DateTimeImmutable();
 
         if (!$jwtService->verifyToken($token)) {
             return false;
         }
-
         $parsedToken = $jwtService->parseToken($token);
 
-        if (
-            !$this->isTokenExisting($parsedToken)
-            || $parsedToken->claims()->get('grant_type') != 'access_token'
-            || $now > $parsedToken->claims()->get('exp')
-        ) {
-            return false;
+        // refresh tokens shouldn't be used to access resources...
+        if ($this->isTokenValid($parsedToken)) {
+            auth()->setUser(User::where('uuid', $parsedToken->claims()->get('user_uuid'))->first());
+            $this->persistedToken($parsedToken)->updateLastUsage();
+            return true;
         }
+        return false;
+    }
 
-        $this->persistedToken($parsedToken)->updateLastUsage();
-
-        return true;
+    protected function isTokenValid(UnencryptedToken $token): bool
+    {
+        $claims = $token->claims()->all();
+        return $this->isTokenExisting($token)
+            && $claims['grant_type'] == 'access_token'
+            && new \DateTimeImmutable() < $claims['exp'];
     }
 
     protected function persistedToken(UnencryptedToken $token): ?JwtToken
