@@ -6,6 +6,7 @@ use App\Http\Requests\AuthenticateUserRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\EditUserAccountRequest;
 use App\Http\Requests\LogoutRequest;
+use App\Http\Requests\ViewUserRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AccountService;
 use App\Services\JwtService;
@@ -51,9 +52,15 @@ class UserController extends Controller
         }
     }
 
+
+    public function view(ViewUserRequest $request)
+    {
+        return new UserResource($request->user());
+    }
+
     public function edit(EditUserAccountRequest $request)
     {
-        $user = auth()->user();
+        $user = $request->user();
         $user->fill($request->validated());
         $user->save();
         return new UserResource($user);
@@ -67,6 +74,6 @@ class UserController extends Controller
                 'message' => 'Logged out successfully'
             ]);
         }
-        abort(400);
+        abort(400, "Invalid credentials");
     }
 }

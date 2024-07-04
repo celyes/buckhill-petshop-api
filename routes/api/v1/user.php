@@ -7,6 +7,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::post('/create', [UserController::class, 'create']);
 
 Route::middleware('jwt')->group(function () {
+    Route::get('/', [UserController::class, 'view']);
     Route::put('/edit', [UserController::class, 'edit']);
     Route::get('/logout', [UserController::class, 'logout']);
 });

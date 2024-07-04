@@ -1,9 +1,10 @@
 <?php
 
 use App\Models\JwtToken;
+use App\Models\User;
 use Illuminate\Testing\Fluent\AssertableJson;
 
-describe('Login tests', function () {
+describe('Account login tests', function () {
     it('should reject login attempts with invalid credentials', function () {
 
         $user = $this->user();

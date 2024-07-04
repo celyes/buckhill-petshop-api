@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Models\JwtToken;
 use App\Models\User;
 use App\Services\BaseService as Service;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Hash;
 
 class AccountService extends Service
