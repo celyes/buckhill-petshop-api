@@ -9,10 +9,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class JwtGuard implements Guard
 {
+    protected ?Authenticatable $user;
     public function __construct(
         protected UserProvider $provider,
         protected JwtService $jwtService,
-        protected ?Authenticatable $user = null
     ) {
     }
 
@@ -34,14 +34,13 @@ class JwtGuard implements Guard
 
         $token = request()->bearerToken();
 
-        if ($token && $this->jwtService->verifyToken($token)) {
-            $parsedToken = $this->jwtService->parseToken($token);
-            $this->user = $this->provider->retrieveById($parsedToken->claims()->all()['uid']);
-
-            return $this->user;
+        if (!$token || !$this->jwtService->verifyToken($token)) {
+            return null;
         }
+        $parsedToken = $this->jwtService->parseToken($token);
+        $this->user = $this->provider->retrieveById($parsedToken->claims()->all()['uid']);
 
-        return null;
+        return $this->user;
     }
 
     public function id(): string|int|null
@@ -63,10 +62,8 @@ class JwtGuard implements Guard
             return false;
         }
 
-        // Retrieve user by credentials (usually email)
         $user = $this->provider->retrieveByCredentials($credentials);
 
-        // Check if the user exists and the password matches
         if ($user && $this->provider->validateCredentials($user, $credentials)) {
             return true;
         }

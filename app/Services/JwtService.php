@@ -119,7 +119,7 @@ class JwtService extends Service
         return $this->config->parser()->parse($token);
     }
 
-    protected function persistToken(UnencryptedToken $token): JwtToken
+    public function persistToken(UnencryptedToken $token): JwtToken
     {
         $tokenClaims = $token->claims()->all();
         $user = User::where('uuid', $tokenClaims['user_uuid'])->first();
