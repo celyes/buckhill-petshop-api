@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\AuthenticateUserRequest;
 use App\Http\Requests\CreateUserRequest;
+use App\Http\Requests\DeleteUserRequest;
 use App\Http\Requests\EditUserAccountRequest;
 use App\Http\Requests\LogoutRequest;
 use App\Http\Requests\ViewUserRequest;
@@ -72,6 +73,18 @@ class UserController extends Controller
             return response()->json([
                 'success' => true,
                 'message' => 'Logged out successfully'
+            ]);
+        }
+        abort(400, "Invalid credentials");
+    }
+
+    public function delete(DeleteUserRequest $request)
+    {
+        $isDeleted = $this->accountService->deleteAccount($request->user());
+        if ($isDeleted) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Account deleted successfully'
             ]);
         }
         abort(400, "Invalid credentials");

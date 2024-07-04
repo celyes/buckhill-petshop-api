@@ -39,7 +39,7 @@ describe('Account login tests', function () {
     });
 });
 
-describe('logout tests', function () {
+describe('Account logout tests', function () {
     it('should log out', function () {
         $user = $this->user();
         $token = tokenFor($user);
@@ -115,5 +115,39 @@ describe('Account edit tests', function () {
             ->has('errors')
             ->etc()
         );
+    });
+});
+
+describe('Account view tests', function () {
+    it('should view account', function () {
+        $user = $this->user();
+        $response = actingAs($user)->getJson('/api/v1/user');
+        $response->assertStatus(200);
+        $response->assertJson(fn(AssertableJson $json) => $json->where('data.id', 1)
+            ->where('data.uuid', $user['uuid'])
+            ->where('data.first_name', $user['first_name'])
+            ->where('data.last_name', $user['last_name'])
+            ->where('data.email', $user['email'])
+            ->where('data.avatar', $user['avatar'])
+            ->where('data.is_marketing', $user['is_marketing'])
+            ->etc()
+        );
+    });
+    it('should reject view attempts when token is invalid', function () {
+        $response = $this->getJson('/api/v1/user');
+        $response->assertStatus(401);
+    });
+});
+
+describe('Account delete tests', function () {
+    it('should delete account', function () {
+        $user = $this->user();
+        $response = actingAs($user)->deleteJson('/api/v1/user');
+        $response->assertStatus(200);
+        expect(User::find($user->id))->toBeNull();
+    });
+    it('should reject delete attempts when token is invalid', function () {
+        $response = $this->getJson('/api/v1/user');
+        $response->assertStatus(401);
     });
 });

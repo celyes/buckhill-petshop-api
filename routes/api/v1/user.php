@@ -10,4 +10,5 @@ Route::middleware('jwt')->group(function () {
     Route::get('/', [UserController::class, 'view']);
     Route::put('/edit', [UserController::class, 'edit']);
     Route::get('/logout', [UserController::class, 'logout']);
+    Route::delete('/', [UserController::class, 'delete']);
 });

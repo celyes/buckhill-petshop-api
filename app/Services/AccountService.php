@@ -67,4 +67,10 @@ class AccountService extends Service
         $token = JwtToken::where('unique_id', $token->claims()->get('unique_id'))->first();
         return $token->revoke();
     }
+
+    public function deleteAccount(Authenticatable $user)
+    {
+        $user->jwtTokens()->update(['is_revoked' => true]);
+        return $user->delete();
+    }
 }
