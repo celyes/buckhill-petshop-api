@@ -12,27 +12,15 @@
 */
 
 
+use App\Services\JwtService;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
 
 uses(
     Tests\TestCase::class,
     RefreshDatabase::class
 )->in('Feature');
-
-/*
-|--------------------------------------------------------------------------
-| Expectations
-|--------------------------------------------------------------------------
-|
-| When you're writing tests, you often need to check that values meet certain conditions. The
-| "expect()" function gives you access to a set of "expectations" methods that you can use
-| to assert different things. Of course, you may extend the Expectation API at any time.
-|
-*/
-
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
 
 /*
 |--------------------------------------------------------------------------
@@ -44,3 +32,22 @@ expect()->extend('toBeOne', function () {
 | global functions to help you to reduce the number of lines of code in your test files.
 |
 */
+
+function actingAs(Authenticatable $user, ?string $token = null)
+{
+    return test()->withHeader(
+        'Authorization', sprintf('Bearer %s', $token ?? tokenFor($user)->toString())
+    );
+}
+
+function tokenFor($user)
+{
+    $jwtService = App::make(JwtService::class);
+    $token = $jwtService->createAccessToken([
+        'grant_type' => 'access_token',
+        'user_uuid' => $user->uuid,
+        'uid' => $user->id
+    ]);
+    $jwtService->persistToken($token);
+    return $token;
+}

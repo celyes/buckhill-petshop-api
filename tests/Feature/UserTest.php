@@ -72,3 +72,35 @@ describe('Account creation tests', function () {
         );
     });
 });
+
+describe('Account edit tests', function () {
+    it('should update account', function () {
+
+        $user = $this->user();
+        $response = actingAs($user)
+            ->putJson('/api/v1/user/edit', [
+                'first_name' => 'jane'
+            ]);
+
+        $response->assertStatus(200);
+        $response->assertJson(fn(AssertableJson $json) => $json->where('data.id', 1)
+            ->where('data.first_name', 'jane')
+            ->etc()
+        );
+    });
+    it('should reject update attempts with invalid data', function () {
+
+        // Make the validation fail...
+        $user = $this->user();
+        $response = actingAs($user)
+            ->putJson('/api/v1/user/edit', [
+                'password' => null
+            ]);
+
+        $response->assertStatus(422);
+        $response->assertJson(fn(AssertableJson $json) => $json->has('message')
+            ->has('errors')
+            ->etc()
+        );
+    });
+});
