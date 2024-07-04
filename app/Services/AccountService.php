@@ -24,7 +24,7 @@ class AccountService extends Service
     {
         $user = User::where('email', $email)->firstOrFail();
 
-        if (!Hash::check($password, $user->password)) {
+        if (is_null($user->email_verified_at) || !Hash::check($password, $user->password)) {
             return false;
         }
 
