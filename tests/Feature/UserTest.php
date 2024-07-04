@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\JwtToken;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 describe('Login tests', function () {
@@ -37,6 +38,17 @@ describe('Login tests', function () {
     });
 });
 
+describe('logout tests', function () {
+    it('should log out', function () {
+        $user = $this->user();
+        $token = tokenFor($user);
+        expect(JwtToken::where('unique_id', $token->claims()->get('unique_id'))->count())->toEqual(1);
+        $response = actingAs($user, $token->toString())->getJson('/api/v1/user/logout');
+        $response->assertStatus(200);
+        expect(JwtToken::where('unique_id', $token->claims()->get('unique_id'))->first()->is_revoked)
+            ->toBeTrue();
+    });
+});
 
 describe('Account creation tests', function () {
     it('should create account', function () {

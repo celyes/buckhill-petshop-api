@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AuthenticateUserRequest;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\EditUserAccountRequest;
+use App\Http\Requests\LogoutRequest;
 use App\Http\Resources\UserResource;
 use App\Services\AccountService;
 use App\Services\JwtService;
@@ -56,5 +57,16 @@ class UserController extends Controller
         $user->fill($request->validated());
         $user->save();
         return new UserResource($user);
+    }
+
+    public function logout(LogoutRequest $request)
+    {
+        if ($this->accountService->logout($request->bearerToken())) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Logged out successfully'
+            ]);
+        }
+        abort(400);
     }
 }

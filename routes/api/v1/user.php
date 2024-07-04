@@ -8,4 +8,5 @@ Route::post('/create', [UserController::class, 'create']);
 
 Route::middleware('jwt')->group(function () {
     Route::put('/edit', [UserController::class, 'edit']);
+    Route::get('/logout', [UserController::class, 'logout']);
 });

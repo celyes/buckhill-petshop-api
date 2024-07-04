@@ -49,7 +49,9 @@ class VerifyJwtToken
     protected function isTokenValid(UnencryptedToken $token): bool
     {
         $claims = $token->claims()->all();
+
         return $this->isTokenExisting($token)
+            && !$this->isTokenRevoked($token)
             && $claims['grant_type'] == 'access_token'
             && new \DateTimeImmutable() < $claims['exp'];
     }
@@ -58,6 +60,11 @@ class VerifyJwtToken
     {
         $tokenUniqueId = $token->claims()->get('unique_id');
         return JwtToken::where('unique_id', $tokenUniqueId)->first();
+    }
+
+    protected function isTokenRevoked(UnencryptedToken $token): bool
+    {
+        return $this->persistedToken($token)->is_revoked;
     }
 
     protected function isTokenExisting(UnencryptedToken $token): bool

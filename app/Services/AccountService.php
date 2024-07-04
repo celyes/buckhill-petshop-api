@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Http\Resources\UserResource;
+use App\Models\JwtToken;
 use App\Models\User;
 use App\Services\BaseService as Service;
 use Illuminate\Support\Facades\Hash;
@@ -57,5 +58,12 @@ class AccountService extends Service
                 $additionalClaims
             )
         ];
+    }
+
+    public function logout(string $token): bool
+    {
+        $token = $this->jwtService->parseToken($token);
+        $token = JwtToken::where('unique_id', $token->claims()->get('unique_id'))->first();
+        return $token->revoke();
     }
 }

@@ -48,6 +48,7 @@ class JwtToken extends Model
         'expires_at' => 'timestamp',
         'last_used_at' => 'timestamp',
         'refreshed_at' => 'timestamp',
+        'is_revoked' => 'boolean'
     ];
 
     /**
@@ -74,6 +75,13 @@ class JwtToken extends Model
             'permissions' => [
                 'refreshes' => $tokens
             ]
+        ])->save();
+    }
+
+    public function revoke(): bool
+    {
+        return $this->forceFill([
+            'is_revoked' => true
         ])->save();
     }
 }
