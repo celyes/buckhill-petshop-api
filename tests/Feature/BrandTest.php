@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Brand;
 use Illuminate\Testing\Fluent\AssertableJson;
 
 describe('brand listing tests', function () {
@@ -56,6 +57,38 @@ describe('brand creation tests', function () {
     });
     it('should reject creating a brand when unauthenticated', function () {
         $response = $this->postJson('api/v1/brand/create', []);
+        $response->assertStatus(401);
+    });
+});
+
+describe('brand update tests', function () {
+    it('should update brand', function () {
+        $user = $this->user();
+        $brand = $this->brand();
+
+        $response = actingAs($user)->putJson('api/v1/brand/' . $brand->uuid, ['title' => 'Updated brand']);
+
+        $response->assertStatus(200);
+
+        $brand = Brand::where('uuid', $brand->uuid)->first();
+
+        $this->assertEquals($brand->title, 'Updated brand');
+    });
+    it('should reject updating a brand when request is invalid', function () {
+        $user = $this->user();
+        $brand = $this->brand();
+        $response = actingAs($user)->putJson('api/v1/brand/' . $brand->uuid, []);
+        $response->assertStatus(422);
+
+        $response->assertJson(fn(AssertableJson $json) => $json->has('message')
+            ->has('errors')
+            ->has('errors.title')
+            ->etc()
+        );
+    });
+    it('should reject updating a brand when unauthenticated', function () {
+        $brand = $this->brand();
+        $response = $this->putJson('api/v1/brand/' . $brand->uuid, []);
         $response->assertStatus(401);
     });
 });

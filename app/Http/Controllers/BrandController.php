@@ -67,4 +67,24 @@ class BrandController extends Controller
             );
         }
     }
+
+    /**
+     * @param UpdateBrandRequest $request
+     * @param Brand $brand
+     * @return JsonResponse
+     */
+    public function edit(UpdateBrandRequest $request, Brand $brand)
+    {
+        try {
+            $brand = $brand->fill($request->validated());
+            $brand->save();
+            return $this->success((new BrandResource($brand))->toArray($request));
+        } catch (\Exception $e) {
+            return $this->error(
+                error: 'Failed to get item.',
+                errors: [$e->getMessage()],
+                trace: $e->getTrace()
+            );
+        }
+    }
 }
