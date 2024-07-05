@@ -65,9 +65,7 @@ describe('brand update tests', function () {
     it('should update brand', function () {
         $user = $this->user();
         $brand = $this->brand();
-
         $response = actingAs($user)->putJson('api/v1/brand/' . $brand->uuid, ['title' => 'Updated brand']);
-
         $response->assertStatus(200);
 
         $brand = Brand::where('uuid', $brand->uuid)->first();

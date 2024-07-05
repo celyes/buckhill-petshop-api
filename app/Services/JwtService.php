@@ -77,9 +77,11 @@ class JwtService extends Service
             ->issuedBy(config('app.url'))
             ->issuedAt($now)
             ->expiresAt($now->modify($expiresAt))
-            ->withClaim('unique_id', Str::uuid())
-            ->withClaim('user_uuid', $claims['user_uuid'])
-            ->withClaim('uid', $claims['uid']);
+            ->withClaim('unique_id', Str::uuid());
+
+        foreach ($claims as $claimTitle => $claimData) {
+            $token = $token->withClaim($claimTitle, $claimData);
+        }
 
         if (isset($claims['grant_type'])) {
             $token = $token->withClaim('grant_type', $claims['grant_type']);

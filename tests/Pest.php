@@ -16,6 +16,7 @@ use App\Services\JwtService;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
 
 uses(
     Tests\TestCase::class,
