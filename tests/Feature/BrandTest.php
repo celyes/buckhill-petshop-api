@@ -16,4 +16,19 @@ describe('brand listing tests', function () {
             ->etc()
         );
     });
+
+    it('should fetch a single brand', function () {
+        $brand = $this->brand();
+
+        $response = $this->getJson('/api/v1/brand/' . $brand->uuid);
+        $response->assertStatus(200);
+        $response->assertJson(fn(AssertableJson $json) => $json->where('success', true)
+            ->has('data.uuid')
+            ->has('data.title')
+            ->has('data.slug')
+            ->has('data.created_at')
+            ->has('data.updated_at')
+            ->etc()
+        );
+    });
 });

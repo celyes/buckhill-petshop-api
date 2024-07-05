@@ -29,4 +29,23 @@ class BrandController extends Controller
     {
         return response()->json($this->brandService->listBrands($request->all()));
     }
+
+
+    /**
+     * @param Request $request
+     * @param Brand $brand
+     * @return JsonResponse
+     */
+    public function show(Request $request, Brand $brand): JsonResponse
+    {
+        try {
+            return $this->success((new BrandResource($brand))->toArray($request));
+        } catch (\Exception $e) {
+            return $this->error(
+                error: 'Failed to get item.',
+                errors: [$e->getMessage()],
+                trace: $e->getTrace()
+            );
+        }
+    }
 }
