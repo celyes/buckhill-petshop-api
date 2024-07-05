@@ -32,3 +32,30 @@ describe('brand listing tests', function () {
         );
     });
 });
+
+describe('brand creation tests', function () {
+    it('should create a brand', function () {
+        $user = $this->user();
+        $response = actingAs($user)->postJson('api/v1/brand/create', ['title' => 'Test Brand']);
+        $response->assertStatus(201);
+        $response->assertJson(fn(AssertableJson $json) => $json->where('success', true)
+            ->has('data.uuid')
+            ->etc()
+        );
+    });
+    it('should reject creating a brand when request is invalid', function () {
+        $user = $this->user();
+        $response = actingAs($user)->postJson('api/v1/brand/create', []);
+        $response->assertStatus(422);
+
+        $response->assertJson(fn(AssertableJson $json) => $json->has('message')
+            ->has('errors')
+            ->has('errors.title')
+            ->etc()
+        );
+    });
+    it('should reject creating a brand when unauthenticated', function () {
+        $response = $this->postJson('api/v1/brand/create', []);
+        $response->assertStatus(401);
+    });
+});

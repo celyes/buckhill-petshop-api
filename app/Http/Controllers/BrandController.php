@@ -48,4 +48,23 @@ class BrandController extends Controller
             );
         }
     }
+
+    /**
+     * @param CreateBrandRequest $request
+     * @return JsonResponse
+     */
+    public function create(CreateBrandRequest $request): JsonResponse
+    {
+        try {
+            $brand = Brand::create($request->validated());
+            return $this->success(['uuid' => $brand->uuid], code: 201);
+        } catch (\Exception $e) {
+            return $this->error(
+                error: 'Failed to get item.',
+                errors: [$e->getMessage()],
+                trace: $e->getTrace()
+
+            );
+        }
+    }
 }
