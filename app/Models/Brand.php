@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use App\Traits\HasSlug;
-use App\Traits\HasUuid;
+use App\Traits\Models\HasSlug;
+use App\Traits\Models\HasUuid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

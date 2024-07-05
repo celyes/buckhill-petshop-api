@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Tests\Mocks;
 
 use App\Traits\Controllers\HasCustomResponse;
 
-abstract class Controller
+class MockController
 {
     use HasCustomResponse;
 }
