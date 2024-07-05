@@ -39,13 +39,14 @@ class BrandController extends Controller
     public function show(Request $request, Brand $brand): JsonResponse
     {
         try {
-            return $this->success((new BrandResource($brand))->toArray($request));
+            $brand = $this->success((new BrandResource($brand))->toArray($request));
+            return response()->json($brand);
         } catch (\Exception $e) {
-            return $this->error(
+            return response()->json($this->error(
                 error: 'Failed to get item.',
                 errors: [$e->getMessage()],
                 trace: $e->getTrace()
-            );
+            ), 400);
         }
     }
 
@@ -57,14 +58,14 @@ class BrandController extends Controller
     {
         try {
             $brand = Brand::create($request->validated());
-            return $this->success(['uuid' => $brand->uuid], code: 201);
+            $brand = $this->success(['uuid' => $brand->uuid]);
+            return response()->json($brand, 201);
         } catch (\Exception $e) {
-            return $this->error(
+            return response()->json($this->error(
                 error: 'Failed to get item.',
                 errors: [$e->getMessage()],
                 trace: $e->getTrace()
-
-            );
+            ), 400);
         }
     }
 
@@ -73,18 +74,19 @@ class BrandController extends Controller
      * @param Brand $brand
      * @return JsonResponse
      */
-    public function edit(UpdateBrandRequest $request, Brand $brand)
+    public function edit(UpdateBrandRequest $request, Brand $brand): JsonResponse
     {
         try {
             $brand = $brand->fill($request->validated());
             $brand->save();
-            return $this->success((new BrandResource($brand))->toArray($request));
+            $brand = $this->success((new BrandResource($brand))->toArray($request));
+            return response()->json($brand);
         } catch (\Exception $e) {
-            return $this->error(
-                error: 'Failed to get item.',
+            return response()->json($this->error(
+                error: 'Failed to update item.',
                 errors: [$e->getMessage()],
                 trace: $e->getTrace()
-            );
+            ), 400);
         }
     }
 
@@ -97,13 +99,13 @@ class BrandController extends Controller
     {
         try {
             $brand->delete();
-            return $this->success();
+            return response()->json($this->success());
         } catch (\Exception $e) {
-            return $this->error(
+            return response()->json($this->error(
                 error: $e->getMessage(),
                 errors: [$e->getMessage()],
                 trace: $e->getTrace()
-            );
+            ), 400);
         }
     }
 }
