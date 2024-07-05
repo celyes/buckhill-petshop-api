@@ -55,6 +55,18 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+        static::setUuid();
+    }
+
+    /**
+     * @return HasMany
+     */
     public function jwtTokens(): HasMany
     {
         return $this->hasMany(JwtToken::class);
