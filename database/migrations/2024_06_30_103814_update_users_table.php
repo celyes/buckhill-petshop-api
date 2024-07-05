@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('name');
             $table->dropColumn('remember_token');
-            $table->string('uuid');
+            $table->string('uuid')->unique();
             $table->string('first_name');
             $table->string('last_name');
             $table->string('avatar')->nullable();
