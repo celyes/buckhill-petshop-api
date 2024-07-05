@@ -87,4 +87,23 @@ class BrandController extends Controller
             );
         }
     }
+
+    /**
+     * @param DeleteBrandRequest $request
+     * @param Brand $brand
+     * @return JsonResponse
+     */
+    public function delete(DeleteBrandRequest $request, Brand $brand): JsonResponse
+    {
+        try {
+            $brand->delete();
+            return $this->success();
+        } catch (\Exception $e) {
+            return $this->error(
+                error: $e->getMessage(),
+                errors: [$e->getMessage()],
+                trace: $e->getTrace()
+            );
+        }
+    }
 }

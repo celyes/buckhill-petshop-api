@@ -92,3 +92,21 @@ describe('brand update tests', function () {
         $response->assertStatus(401);
     });
 });
+
+
+describe('brand delete tests', function () {
+    it('should delete brand', function () {
+        $user = $this->user();
+        $brand = $this->brand();
+        $response = actingAs($user)->deleteJson('api/v1/brand/' . $brand->uuid);
+        $response->assertStatus(200);
+        $response->assertJson(fn(AssertableJson $json) => $json->where('success', true)
+            ->etc()
+        );
+    });
+    it('should reject deleting a brand when unauthenticated', function () {
+        $brand = $this->brand();
+        $response = $this->deleteJson('api/v1/brand/' . $brand->uuid);
+        $response->assertStatus(401);
+    });
+});
