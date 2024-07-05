@@ -51,3 +51,9 @@ function tokenFor($user)
     $jwtService->persistToken($token);
     return $token;
 }
+
+function seed(): void
+{
+    Artisan::call('db:seed');
+}
+
