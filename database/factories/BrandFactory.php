@@ -27,8 +27,8 @@ class BrandFactory extends Factory
                 'Skiptown',
                 'Companion Protect',
                 'TryFi',
-                'Zesty Paws'
-            ])
+                'Zesty Paws',
+            ]),
         ];
     }
 }

@@ -36,7 +36,7 @@ return [
     ],
     'encryption' => [
         'public_key' => env('APP_PUBLIC_KEY'),
-        'private_key' => env('APP_PRIVATE_KEY')
-    ]
+        'private_key' => env('APP_PRIVATE_KEY'),
+    ],
 
 ];
