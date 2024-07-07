@@ -8,7 +8,7 @@ class BrandService
 {
     public function listBrands(array $data)
     {
-        $per_page = $data['per_page'] ?? 10;
+        $per_page = $data['perPage'] ?? 10;
         $orderBy = $data['orderBy'] ?? 'id';
         $limit = $data['limit'] ?? null;
         $desc = $data['desc'] ?? false;
