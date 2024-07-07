@@ -22,8 +22,8 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(JwtService::class, function (Application $app) {
             return new JwtService(
                 config('app.url'),
-                storage_path('keys/private_key.pem'),
-                storage_path('keys/public_key.pem')
+                config('services.encryption.private_key'),
+                config('services.encryption.public_key')
             );
         });
 
