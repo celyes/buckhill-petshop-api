@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 trait HasSlug
 {
     protected static string $slugKey = 'title';
+
     protected static string $slugColumn = 'slug';
 
     protected static function setSlugs(): void

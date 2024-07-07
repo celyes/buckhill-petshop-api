@@ -5,8 +5,8 @@ namespace App\Traits\Controllers;
 trait HasCustomResponse
 {
     /**
-     * @param array<string, mixed> $data
-     * @param array<string, mixed> $extra
+     * @param  array<string, mixed>  $data
+     * @param  array<string, mixed>  $extra
      * @return array<int|string, mixed>
      */
     public function success(array $data = [], array $extra = []): array
@@ -18,10 +18,9 @@ trait HasCustomResponse
     }
 
     /**
-     * @param string $error
-     * @param array<int, mixed> $errors
-     * @param array<int, mixed> $trace
-     * @param int $code
+     * @param  array<int, mixed>  $errors
+     * @param  array<int, mixed>  $trace
+     * @param  int  $code
      * @return array<int|string, mixed>
      */
     public function error(string $error, array $errors = [], array $trace = []): array
@@ -35,12 +34,10 @@ trait HasCustomResponse
     }
 
     /**
-     * @param bool $success
-     * @param array<string, mixed> $data
-     * @param string|null $error
-     * @param array<int, mixed>|null $errors
-     * @param array<string, mixed>|null $extra
-     * @param array<int, mixed>|null $trace
+     * @param  array<string, mixed>  $data
+     * @param  array<int, mixed>|null  $errors
+     * @param  array<string, mixed>|null  $extra
+     * @param  array<int, mixed>|null  $trace
      * @return array<string|int, mixed>
      */
     protected function jsonResponse(
@@ -50,19 +47,19 @@ trait HasCustomResponse
         ?array $errors = [],
         ?array $extra = [],
         ?array $trace = []
-    ): array
-    {
+    ): array {
         $data = [
             'success' => $success,
             'data' => $data,
             'error' => $error,
-            'errors' => $errors
+            'errors' => $errors,
         ];
-        if (!is_null($error)) {
+        if (! is_null($error)) {
             $data['trace'] = $trace;
         } else {
             $data['extra'] = $extra;
         }
+
         return $data;
     }
 }
