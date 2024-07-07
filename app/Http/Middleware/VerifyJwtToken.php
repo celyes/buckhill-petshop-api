@@ -2,10 +2,10 @@
 
 namespace App\Http\Middleware;
 
-use App\Models\User;
-use Closure;
 use App\Models\JwtToken;
+use App\Models\User;
 use App\Services\JwtService;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
 use Lcobucci\JWT\UnencryptedToken;
@@ -16,7 +16,7 @@ class VerifyJwtToken
     /**
      * Handle an incoming request.
      *
-     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
     {
@@ -32,7 +32,7 @@ class VerifyJwtToken
 
         $jwtService = App::make(JwtService::class);
 
-        if (!$jwtService->verifyToken($token)) {
+        if (! $jwtService->verifyToken($token)) {
             return false;
         }
         $parsedToken = $jwtService->parseToken($token);
@@ -41,8 +41,10 @@ class VerifyJwtToken
         if ($this->isTokenValid($parsedToken)) {
             auth()->setUser(User::where('uuid', $parsedToken->claims()->get('user_uuid'))->first());
             $this->persistedToken($parsedToken)->updateLastUsage();
+
             return true;
         }
+
         return false;
     }
 
@@ -51,7 +53,7 @@ class VerifyJwtToken
         $claims = $token->claims()->all();
 
         return $this->isTokenExisting($token)
-            && !$this->isTokenRevoked($token)
+            && ! $this->isTokenRevoked($token)
             && $claims['grant_type'] == 'access_token'
             && new \DateTimeImmutable() < $claims['exp'];
     }
@@ -59,6 +61,7 @@ class VerifyJwtToken
     protected function persistedToken(UnencryptedToken $token): ?JwtToken
     {
         $tokenUniqueId = $token->claims()->get('unique_id');
+
         return JwtToken::where('unique_id', $tokenUniqueId)->first();
     }
 
@@ -69,6 +72,6 @@ class VerifyJwtToken
 
     protected function isTokenExisting(UnencryptedToken $token): bool
     {
-        return !is_null($this->persistedToken($token));
+        return ! is_null($this->persistedToken($token));
     }
 }

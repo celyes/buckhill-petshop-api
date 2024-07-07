@@ -3,9 +3,9 @@
 namespace App\Guards;
 
 use App\Services\JwtService;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Contracts\Auth\UserProvider;
-use Illuminate\Contracts\Auth\Authenticatable;
 
 class JwtGuard implements Guard
 {
@@ -13,17 +13,16 @@ class JwtGuard implements Guard
         protected UserProvider $provider,
         protected JwtService $jwtService,
         protected ?Authenticatable $user = null
-    ) {
-    }
+    ) {}
 
     public function check(): bool
     {
-        return !is_null($this->user());
+        return ! is_null($this->user());
     }
 
     public function guest(): bool
     {
-        return !$this->check();
+        return ! $this->check();
     }
 
     public function user(): ?Authenticatable
@@ -34,7 +33,7 @@ class JwtGuard implements Guard
 
         $token = request()->bearerToken();
 
-        if (!$token || !$this->jwtService->verifyToken($token)) {
+        if (! $token || ! $this->jwtService->verifyToken($token)) {
             return null;
         }
         $parsedToken = $this->jwtService->parseToken($token);
@@ -53,8 +52,7 @@ class JwtGuard implements Guard
     }
 
     /**
-     * @param array<string, string> $credentials
-     * @return bool
+     * @param  array<string, string>  $credentials
      */
     public function validate(array $credentials = []): bool
     {
@@ -80,6 +78,6 @@ class JwtGuard implements Guard
 
     public function hasUser(): bool
     {
-        return !is_null($this->user);
+        return ! is_null($this->user);
     }
 }

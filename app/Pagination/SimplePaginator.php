@@ -19,17 +19,17 @@ class SimplePaginator extends LengthAwarePaginator
                 [
                     'url' => $this->previousPageUrl(),
                     'label' => '&laquo; Previous',
-                    'active' => false
+                    'active' => false,
                 ],
                 [
                     'url' => $this->url($this->currentPage()),
                     'label' => '&laquo; Previous',
-                    'active' => true
+                    'active' => true,
                 ],
                 [
                     'url' => $this->nextPageUrl(),
                     'label' => '&raquo; Next',
-                    'active' => false
+                    'active' => false,
                 ],
             ],
             'next_page_url' => $this->nextPageUrl(),
