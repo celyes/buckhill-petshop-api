@@ -6,7 +6,7 @@ describe('Token creation tests', function () {
         $tokenParts = explode('.', $jwtService->createAccessToken([])->toString());
         $this->assertCount(3, $tokenParts);
 
-        list($header, $payload, $signature) = $tokenParts;
+        [$header, $payload, $signature] = $tokenParts;
 
         $this->assertTrue(isBase64($header));
         $this->assertTrue(isBase64($payload));
@@ -18,7 +18,7 @@ describe('Token creation tests', function () {
         $tokenParts = explode('.', $jwtService->createRefreshToken([])->toString());
         $this->assertCount(3, $tokenParts);
 
-        list($header, $payload, $signature) = $tokenParts;
+        [$header, $payload, $signature] = $tokenParts;
 
         $this->assertTrue(isBase64($header));
         $this->assertTrue(isBase64($payload));

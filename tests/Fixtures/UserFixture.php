@@ -22,7 +22,7 @@ trait UserFixture
             'address' => 'password',
             'phone_number' => 'password',
             'avatar' => 'password',
-            'is_marketing'
+            'is_marketing',
         ], $mutations);
     }
 
@@ -30,7 +30,7 @@ trait UserFixture
     {
         return array_merge([
             'email' => 'mail.provider.com',
-            'password' => 'password'
+            'password' => 'password',
         ], $mutations);
     }
 }

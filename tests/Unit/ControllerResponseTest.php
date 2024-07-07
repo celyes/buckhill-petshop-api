@@ -12,6 +12,6 @@ test('test error response method', function () {
     $controller = new MockController();
     $success = $controller->error('some error', ['foo' => 'bar'], ['x' => 'y']);
     expect($success)->toHaveKeys([
-        'success', 'data', 'error', 'errors', 'errors.foo', 'trace', 'trace.x'
+        'success', 'data', 'error', 'errors', 'errors.foo', 'trace', 'trace.x',
     ]);
 });

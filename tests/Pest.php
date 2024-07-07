@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-
 uses(
     Tests\TestCase::class,
     RefreshDatabase::class,
@@ -47,12 +46,12 @@ function tokenFor($user)
     $token = $jwtService->createAccessToken([
         'grant_type' => 'access_token',
         'user_uuid' => $user->uuid,
-        'uid' => $user->id
+        'uid' => $user->id,
     ]);
     $jwtService->persistToken($token);
+
     return $token;
 }
-
 
 function seed(): void
 {
@@ -63,12 +62,12 @@ function jwtService(): JwtService
 {
     return new JwtService(
         'http://localhost',
-        __DIR__ . '/Concerns/Keys/private_key.pem',
-        __DIR__ . '/Concerns/Keys/public_key.pem'
+        __DIR__.'/Concerns/Keys/private_key.pem',
+        __DIR__.'/Concerns/Keys/public_key.pem'
     );
 }
 
 function isBase64($string)
 {
-    return (bool)preg_match('/^[a-zA-Z0-9-_\/\r\n+]*={0,2}$/', $string);
+    return (bool) preg_match('/^[a-zA-Z0-9-_\/\r\n+]*={0,2}$/', $string);
 }

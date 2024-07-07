@@ -8,6 +8,6 @@ use Tests\Fixtures\UserFixture;
 
 abstract class TestCase extends BaseTestCase
 {
-    use UserFixture;
     use BrandFixture;
+    use UserFixture;
 }

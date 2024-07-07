@@ -11,11 +11,11 @@ describe('Account login tests', function () {
 
         $response = $this->postJson('/api/v1/user/login', [
             'email' => $user->email,
-            'password' => 'wrong-password'
+            'password' => 'wrong-password',
         ]);
 
         $response->assertStatus(400);
-        $response->assertJson(fn(AssertableJson $json) => $json->where('message', 'Invalid credentials')
+        $response->assertJson(fn (AssertableJson $json) => $json->where('message', 'Invalid credentials')
             ->etc()
         );
     });
@@ -28,7 +28,7 @@ describe('Account login tests', function () {
         );
 
         $response->assertStatus(200);
-        $response->assertJson(fn(AssertableJson $json) => $json->where('user.id', 1)
+        $response->assertJson(fn (AssertableJson $json) => $json->where('user.id', 1)
             ->where('user.first_name', $user->first_name)
             ->where('user.last_name', $user->last_name)
             ->where('user.email', $user->email)
@@ -55,12 +55,12 @@ describe('Account creation tests', function () {
     it('should create account', function () {
         $user = $this->userCreatePayload([
             'password' => '$3cr3t#Pa$$w0rd',
-            'password_confirmation' => '$3cr3t#Pa$$w0rd'
+            'password_confirmation' => '$3cr3t#Pa$$w0rd',
         ]);
         $response = $this->postJson('/api/v1/user/create', $user);
 
         $response->assertStatus(201);
-        $response->assertJson(fn(AssertableJson $json) => $json->where('user.id', 1)
+        $response->assertJson(fn (AssertableJson $json) => $json->where('user.id', 1)
             ->where('user.first_name', $user['first_name'])
             ->where('user.last_name', $user['last_name'])
             ->where('user.email', $user['email'])
@@ -79,7 +79,7 @@ describe('Account creation tests', function () {
         $response = $this->postJson('/api/v1/user/create', $user);
 
         $response->assertStatus(422);
-        $response->assertJson(fn(AssertableJson $json) => $json->has('message')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('message')
             ->has('errors')
             ->etc()
         );
@@ -92,11 +92,11 @@ describe('Account edit tests', function () {
         $user = $this->user();
         $response = actingAs($user)
             ->putJson('/api/v1/user/edit', [
-                'first_name' => 'jane'
+                'first_name' => 'jane',
             ]);
 
         $response->assertStatus(200);
-        $response->assertJson(fn(AssertableJson $json) => $json->where('data.id', 1)
+        $response->assertJson(fn (AssertableJson $json) => $json->where('data.id', 1)
             ->where('data.first_name', 'jane')
             ->etc()
         );
@@ -107,11 +107,11 @@ describe('Account edit tests', function () {
         $user = $this->user();
         $response = actingAs($user)
             ->putJson('/api/v1/user/edit', [
-                'password' => null
+                'password' => null,
             ]);
 
         $response->assertStatus(422);
-        $response->assertJson(fn(AssertableJson $json) => $json->has('message')
+        $response->assertJson(fn (AssertableJson $json) => $json->has('message')
             ->has('errors')
             ->etc()
         );
@@ -123,7 +123,7 @@ describe('Account view tests', function () {
         $user = $this->user();
         $response = actingAs($user)->getJson('/api/v1/user');
         $response->assertStatus(200);
-        $response->assertJson(fn(AssertableJson $json) => $json->where('data.id', 1)
+        $response->assertJson(fn (AssertableJson $json) => $json->where('data.id', 1)
             ->where('data.uuid', $user['uuid'])
             ->where('data.first_name', $user['first_name'])
             ->where('data.last_name', $user['last_name'])
