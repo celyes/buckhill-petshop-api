@@ -29,13 +29,12 @@ return Application::configure(basePath: dirname(__DIR__))
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         },
-        commands: __DIR__ . '/../routes/console.php',
+        commands: __DIR__.'/../routes/console.php',
         health: '/up'
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-           'jwt' => VerifyJwtToken::class
+            'jwt' => VerifyJwtToken::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions) {
-    })->create();
+    ->withExceptions(function (Exceptions $exceptions) {})->create();
