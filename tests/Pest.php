@@ -1,5 +1,11 @@
 <?php
 
+use App\Services\JwtService;
+use Illuminate\Contracts\Auth\Authenticatable;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Artisan;
+
 /*
 |--------------------------------------------------------------------------
 | Test Case
@@ -12,15 +18,9 @@
 */
 
 
-use App\Services\JwtService;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\Artisan;
-
 uses(
     Tests\TestCase::class,
-    RefreshDatabase::class
+    RefreshDatabase::class,
 )->in('Feature');
 
 /*
@@ -53,8 +53,22 @@ function tokenFor($user)
     return $token;
 }
 
+
 function seed(): void
 {
     Artisan::call('db:seed');
 }
 
+function jwtService(): JwtService
+{
+    return new JwtService(
+        'http://localhost',
+        __DIR__ . '/Concerns/Keys/private_key.pem',
+        __DIR__ . '/Concerns/Keys/public_key.pem'
+    );
+}
+
+function isBase64($string)
+{
+    return (bool)preg_match('/^[a-zA-Z0-9-_\/\r\n+]*={0,2}$/', $string);
+}

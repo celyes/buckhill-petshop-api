@@ -16,14 +16,16 @@ use App\Services\BaseService as Service;
 
 class JwtService extends Service
 {
+    protected string $issuer;
     protected Configuration $config;
 
-    public function __construct()
+    public function __construct(string $issuer, string $signingKeyPath, string $verificationKeyPath)
     {
+        $this->issuer = $issuer;
         $this->config = Configuration::forAsymmetricSigner(
             new Sha256(),
-            InMemory::file(storage_path('keys/private_key.pem')),
-            InMemory::file(storage_path('keys/public_key.pem'))
+            InMemory::file($signingKeyPath),
+            InMemory::file($verificationKeyPath)
         );
     }
 
@@ -60,7 +62,10 @@ class JwtService extends Service
      */
     public function createRefreshToken(array $claims): UnencryptedToken
     {
-        return $this->createToken(['grant_type' => 'refresh_token', ...$claims], '+1 month');
+        return $this->createToken(
+            ['grant_type' => 'refresh_token', ...$claims],
+            '+1 month'
+        );
     }
 
 
@@ -69,12 +74,15 @@ class JwtService extends Service
      * @param string $expiresAt
      * @return UnencryptedToken
      */
-    protected function createToken(array $claims, string $expiresAt = '+1 hour'): UnencryptedToken
+    protected function createToken(
+        array $claims,
+        string $expiresAt = '+1 hour',
+    ): UnencryptedToken
     {
         $now = new \DateTimeImmutable();
 
         $token = $this->config->builder()
-            ->issuedBy(config('app.url'))
+            ->issuedBy($this->issuer)
             ->issuedAt($now)
             ->expiresAt($now->modify($expiresAt))
             ->withClaim('unique_id', Str::uuid());

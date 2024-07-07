@@ -20,7 +20,11 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->singleton(JwtService::class, function (Application $app) {
-            return new JwtService();
+            return new JwtService(
+                config('app.url'),
+                storage_path('keys/private_key.pem'),
+                storage_path('keys/public_key.pem')
+            );
         });
 
         $this->app->singleton(AccountService::class, function (Application $app) {

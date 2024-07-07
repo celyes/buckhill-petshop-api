@@ -9,10 +9,10 @@ use Illuminate\Contracts\Auth\Authenticatable;
 
 class JwtGuard implements Guard
 {
-    protected ?Authenticatable $user;
     public function __construct(
         protected UserProvider $provider,
         protected JwtService $jwtService,
+        protected ?Authenticatable $user = null
     ) {
     }
 
@@ -28,7 +28,7 @@ class JwtGuard implements Guard
 
     public function user(): ?Authenticatable
     {
-        if ($this->user !== null) {
+        if ($this->user) {
             return $this->user;
         }
 
