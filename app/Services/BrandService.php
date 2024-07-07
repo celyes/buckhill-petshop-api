@@ -12,6 +12,7 @@ class BrandService
         $orderBy = $data['orderBy'] ?? 'id';
         $limit = $data['limit'] ?? null;
         $desc = $data['desc'] ?? false;
+
         return Brand::orderBy($orderBy, $desc ? 'desc' : 'asc')
             ->limit($limit)
             ->paginate($per_page)

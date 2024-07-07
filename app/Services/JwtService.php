@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\JwtToken;
+use App\Models\User;
+use App\Services\BaseService as Service;
 use Illuminate\Support\Str;
 use Lcobucci\JWT\Configuration;
 use Lcobucci\JWT\Encoding\CannotDecodeContent;
@@ -11,12 +13,11 @@ use Lcobucci\JWT\Signer\Rsa\Sha256;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint\SignedWith;
-use App\Models\User;
-use App\Services\BaseService as Service;
 
 class JwtService extends Service
 {
     protected string $issuer;
+
     protected Configuration $config;
 
     public function __construct(string $issuer, string $signingKeyPath, string $verificationKeyPath)
@@ -30,8 +31,8 @@ class JwtService extends Service
     }
 
     /**
-     * @param array<string, mixed> $accessTokenClaims
-     * @param array<string, mixed> $refreshTokenClaims
+     * @param  array<string, mixed>  $accessTokenClaims
+     * @param  array<string, mixed>  $refreshTokenClaims
      * @return array<string, string>
      */
     public function createTokenPair(array $accessTokenClaims, array $refreshTokenClaims): array
@@ -43,13 +44,12 @@ class JwtService extends Service
 
         return [
             'access_token' => $accessToken->toString(),
-            'refresh_token' => $refreshToken->toString()
+            'refresh_token' => $refreshToken->toString(),
         ];
     }
 
     /**
-     * @param array<string, mixed> $claims
-     * @return UnencryptedToken
+     * @param  array<string, mixed>  $claims
      */
     public function createAccessToken(array $claims): UnencryptedToken
     {
@@ -57,8 +57,7 @@ class JwtService extends Service
     }
 
     /**
-     * @param array<string, mixed> $claims
-     * @return UnencryptedToken
+     * @param  array<string, mixed>  $claims
      */
     public function createRefreshToken(array $claims): UnencryptedToken
     {
@@ -68,17 +67,13 @@ class JwtService extends Service
         );
     }
 
-
     /**
-     * @param array<string, mixed> $claims
-     * @param string $expiresAt
-     * @return UnencryptedToken
+     * @param  array<string, mixed>  $claims
      */
     protected function createToken(
         array $claims,
         string $expiresAt = '+1 hour',
-    ): UnencryptedToken
-    {
+    ): UnencryptedToken {
         $now = new \DateTimeImmutable();
 
         $token = $this->config->builder()
@@ -101,10 +96,6 @@ class JwtService extends Service
         );
     }
 
-    /**
-     * @param string $token
-     * @return bool
-     */
     public function verifyToken(string $token): bool
     {
         try {
@@ -120,10 +111,6 @@ class JwtService extends Service
         }
     }
 
-    /**
-     * @param string $token
-     * @return UnencryptedToken|Token|null
-     */
     public function parseToken(string $token): UnencryptedToken|Token|null
     {
         return $this->config->parser()->parse($token);
