@@ -48,24 +48,18 @@ class JwtToken extends Model
         'expires_at' => 'timestamp',
         'last_used_at' => 'timestamp',
         'refreshed_at' => 'timestamp',
-        'is_revoked' => 'boolean'
+        'is_revoked' => 'boolean',
     ];
 
-    /**
-     * @return BelongsTo
-     */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    /**
-     * @return bool
-     */
     public function updateLastUsage(): bool
     {
         return $this->forceFill([
-            'last_used_at' => now()
+            'last_used_at' => now(),
         ])->save();
     }
 
@@ -73,15 +67,15 @@ class JwtToken extends Model
     {
         return $this->forceFill([
             'permissions' => [
-                'refreshes' => $tokens
-            ]
+                'refreshes' => $tokens,
+            ],
         ])->save();
     }
 
     public function revoke(): bool
     {
         return $this->forceFill([
-            'is_revoked' => true
+            'is_revoked' => true,
         ])->save();
     }
 }

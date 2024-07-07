@@ -10,8 +10,8 @@ use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    use HasUuid;
     use HasFactory;
+    use HasUuid;
     use Notifiable;
 
     /**
@@ -64,9 +64,6 @@ class User extends Authenticatable
         static::setUuid();
     }
 
-    /**
-     * @return HasMany
-     */
     public function jwtTokens(): HasMany
     {
         return $this->hasMany(JwtToken::class);

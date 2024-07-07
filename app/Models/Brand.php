@@ -9,10 +9,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Brand extends Model
 {
-    use HasFactory, HasUuid, HasSlug;
+    use HasFactory, HasSlug, HasUuid;
 
     protected $fillable = [
-        'title'
+        'title',
     ];
 
     protected static function boot()
