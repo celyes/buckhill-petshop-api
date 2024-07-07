@@ -29,40 +29,47 @@ class BrandController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @return JsonResponse
      * @OA\Get(
      *      path="/api/v1/brands",
      *      summary="List brands",
+     *
      *      @OA\Response(response="200", description="Succses"),
      *      security={{"bearerAuth":{}}},
      *     tags={"Brand"},
+     *
      *      @OA\Parameter(
      *           name="per_page",
      *           in="query",
      *           description="Number of results in page. default is 10.",
      *           required=false,
+     *
      *           @OA\Schema(type="int")
      *      ),
+     *
      *      @OA\Parameter(
      *            name="orderBy",
      *            in="query",
      *            description="The field to which the results are ordered by. default is Id.",
      *            required=false,
+     *
      *            @OA\Schema(type="string")
      *       ),
+     *
      *        @OA\Parameter(
      *             name="limit",
      *             in="query",
      *             description="The limit of results returned. returns all matching resutls if no limit is provided.",
      *             required=false,
+     *
      *             @OA\Schema(type="int")
      *        ),
+     *
      *        @OA\Parameter(
      *              name="desc",
      *              in="query",
      *              description="Specifies whether to order the results descendingly or ascendingly. default is false. (asc)",
      *              required=false,
+     *
      *              @OA\Schema(type="boolean")
      *         ),
      * ),
@@ -72,22 +79,21 @@ class BrandController extends Controller
         return response()->json($this->brandService->listBrands($request->all()));
     }
 
-
     /**
-     * @param Request $request
-     * @param Brand $brand
-     * @return JsonResponse
      * @OA\Get(
      *       path="/api/v1/brand/{uuid}",
      *       summary="Fetch a single brand",
+     *
      *       @OA\Response(response="200", description="Succses"),
      *       @OA\Response(response="401", description="Unauthenticated"),
      *       security={{"bearerAuth":{}}},
      *      tags={"Brand"},
+     *
      *      @OA\Parameter(
      *          name="uuid",
      *          in="path",
      *          required=true,
+     *
      *          @OA\Schema(type="string"),
      *          description="UUID of the brand"
      *      ),
@@ -97,6 +103,7 @@ class BrandController extends Controller
     {
         try {
             $brand = $this->success((new BrandResource($brand))->toArray($request));
+
             return response()->json($brand);
         } catch (\Exception $e) {
             return response()->json($this->error(
@@ -108,20 +115,21 @@ class BrandController extends Controller
     }
 
     /**
-     * @param CreateBrandRequest $request
-     * @return JsonResponse
      * @OA\Post(
      *        path="/api/v1/brand/create",
      *        summary="Create a new brand",
+     *
      *        @OA\Response(response="200", description="Succses"),
      *        @OA\Response(response="401", description="Unauthenticated"),
      *        @OA\Response(response="422", description="Validation errors"),
      *        security={{"bearerAuth":{}}},
      *       tags={"Brand"},
+     *
      *       @OA\Parameter(
      *           name="title",
      *           required=true,
      *           in="query",
+     *
      *           @OA\Schema(type="string"),
      *           description="The title of the brand"
      *       ),
@@ -132,6 +140,7 @@ class BrandController extends Controller
         try {
             $brand = Brand::create($request->validated());
             $brand = $this->success(['uuid' => $brand->uuid]);
+
             return response()->json($brand, 201);
         } catch (\Exception $e) {
             return response()->json($this->error(
@@ -143,28 +152,30 @@ class BrandController extends Controller
     }
 
     /**
-     * @param UpdateBrandRequest $request
-     * @param Brand $brand
-     * @return JsonResponse
      * @OA\Put(
      *         path="/api/v1/brand/{uuid}",
      *         summary="Update a brand",
+     *
      *         @OA\Response(response="200", description="Succses"),
      *         @OA\Response(response="401", description="Unauthenticated"),
      *         @OA\Response(response="422", description="Validation errors"),
      *         security={{"bearerAuth":{}}},
      *        tags={"Brand"},
+     *
      *         @OA\Parameter(
      *             name="uuid",
      *             in="path",
      *             required=true,
+     *
      *             @OA\Schema(type="string"),
      *             description="The unique UUID of the brand"
      *         ),
+     *
      *        @OA\Parameter(
      *            name="title",
      *            required=false,
      *            in="query",
+     *
      *            @OA\Schema(type="string"),
      *            description="The title of the brand"
      *        ),
@@ -176,6 +187,7 @@ class BrandController extends Controller
             $brand = $brand->fill($request->validated());
             $brand->save();
             $brand = $this->success((new BrandResource($brand))->toArray($request));
+
             return response()->json($brand);
         } catch (\Exception $e) {
             return response()->json($this->error(
@@ -187,21 +199,21 @@ class BrandController extends Controller
     }
 
     /**
-     * @param DeleteBrandRequest $request
-     * @param Brand $brand
-     * @return JsonResponse
      * @OA\Delete(
      *          path="/api/v1/brand/{uuid}",
      *          summary="Update a brand",
+     *
      *          @OA\Response(response="200", description="Succses"),
      *          @OA\Response(response="401", description="Unauthenticated"),
      *          @OA\Response(response="422", description="Validation errors"),
      *          security={{"bearerAuth":{}}},
      *          tags={"Brand"},
+     *
      *          @OA\Parameter(
      *             name="uuid",
      *             in="path",
      *             required=true,
+     *
      *             @OA\Schema(type="string"),
      *             description="The unique UUID of the brand"
      *         ),
@@ -211,6 +223,7 @@ class BrandController extends Controller
     {
         try {
             $brand->delete();
+
             return response()->json($this->success());
         } catch (\Exception $e) {
             return response()->json($this->error(
