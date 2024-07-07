@@ -11,7 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
  * @property string $first_name
  * @property string $last_name
  * @property string $email
- * @property string$avatar
+ * @property string $avatar
  * @property bool $is_marketing
  */
 class UserResource extends JsonResource
@@ -30,7 +30,7 @@ class UserResource extends JsonResource
             'last_name' => $this->last_name,
             'email' => $this->email,
             'avatar' => $this->avatar,
-            'is_marketing' => (bool) $this->is_marketing
+            'is_marketing' => (bool) $this->is_marketing,
         ];
     }
 }
