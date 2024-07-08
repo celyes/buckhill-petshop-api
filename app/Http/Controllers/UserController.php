@@ -211,7 +211,7 @@ class UserController extends Controller
      *
      * @OA\Put(
      *       path="/api/v1/user/edit",
-     *       summary="Edit use raccount",
+     *       summary="Edit user account",
      *       tags={"User"},
      *
      *  @OA\Parameter(
