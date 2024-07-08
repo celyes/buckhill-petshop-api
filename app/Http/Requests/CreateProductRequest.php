@@ -30,7 +30,7 @@ class CreateProductRequest extends FormRequest
         ];
     }
 
-    public function passedValidation()
+    public function passedValidation(): void
     {
         $this->merge([
             'metadata' => [

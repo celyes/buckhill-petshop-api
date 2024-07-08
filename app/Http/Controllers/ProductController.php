@@ -6,7 +6,7 @@ use App\Http\Requests\CreateProductRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
 use OpenApi\Annotations as OA;
 
 /**
@@ -17,6 +17,16 @@ use OpenApi\Annotations as OA;
  */
 class ProductController extends Controller
 {
+    /**
+     * @param Request $request
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index(Request $request)
+    {
+        $products = Product::filter($request->all())->paginate($request->input('perPage', 25));
+        return ProductResource::collection($products);
+    }
+
     /**
      * @param Product $product
      * @return JsonResource
