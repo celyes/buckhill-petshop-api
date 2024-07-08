@@ -18,6 +18,31 @@ use OpenApi\Annotations as OA;
 class ProductController extends Controller
 {
     /**
+     * @param Product $product
+     * @return JsonResource
+     * @OA\Get(
+     *        path="/api/v1/prodct/{uuid}",
+     *        summary="Show a single product",
+     *        tags={"Product"},
+     *
+     *   @OA\Parameter(
+     *             name="uuid",
+     *             in="path",
+     *             description="User's first name",
+     *             required=false,
+     *             @OA\Schema(type="string")
+     *         ),
+     *
+     *   @OA\Response(response="200", description="Product fetched successfully"),
+     *   @OA\Response(response="404", description="Not found")
+     *    )
+     */
+    public function show(Product $product): JsonResource
+    {
+        return new ProductResource($product);
+    }
+
+    /**
      * @param CreateProductRequest $request
      * @return JsonResource
      * @OA\Put(
